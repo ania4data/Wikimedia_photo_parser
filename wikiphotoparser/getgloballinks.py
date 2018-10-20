@@ -11,6 +11,7 @@ import pandas as pd
 import os
 
 class wiki_photo_parser():
+	
 
 	def __init__(self):
 
