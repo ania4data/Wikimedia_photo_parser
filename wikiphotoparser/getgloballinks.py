@@ -11,52 +11,123 @@ import pandas as pd
 import os
 
 
-html_page = urllib.request.urlopen('https://commons.wikimedia.org/wiki/Commons:Quality_images/Subject/Microscopic') 
-soup = BeautifulSoup(html_page, 'lxml')
-images = []
-data_name = {}
-collage_index = {}
 
-name_list = []
-address_list_thumb = []
-address_list_original = []
-file_address_list = []
-
-count = 0
-for a_ in soup.findAll('a'):
-	tmp = a_.get('href')
-
-	if('/wiki/File:' in str(tmp)):
-		
-
-		href = tmp
+def get_wiki_address(file_name):
 
 
-		for link in a_.findAll('img'):
+	"""Function to read in data from a txt file. The txt file should have
+	the wikimedia photo link to quality images e.g.
+	https://commons.wikimedia.org/wiki/Commons:Quality_images/Technical/Exposure
+            
+	Args:
+		file_name (string): name of a file to read from
+    
+	Returns:
+		url_list (string): list of wikimedia potential pages to sparse
+    
+	"""
+        
+	with open(file_name) as file:
+		url_list = []
+		line = file.readline()
+		while line:
+			if('https://commons.wikimedia.org/wiki/' not in line):
 
-			count += 1
+				print('-----------Error: link is not from wikimedia common Quality images-------- \n')
+				
+				break
 
-			file_name = (link.get('alt'))
-			file_address = (link.get('src'))
+			url_list.append(line.rstrip())
+			line = file.readline()
 
-			data_name[file_name] = file_address
+		file.close()
 
-			name_list.append(file_name.rstrip())
-			address_list_thumb.append(file_address.rstrip())
-			file_address_tmp = 'https://commons.wikimedia.org/wiki/File:' + file_address.split('/')[-2].rstrip()
-			file_address_list.append(file_address_tmp)
-			thumb_pix = '/' + file_address.split('/')[-1][0:3]       
-			#print(file_address.split(thumb_pix)[0].replace('/thumb',''))
-			address_list_original.append(file_address.split(thumb_pix)[0].replace('/thumb',''))
+	return url_list  
 
 
-json_data1 = json.dumps(data_name)
+def get_photo_address(url_list):
 
-with open('data_name.json', 'w') as outfile1:
-    json.dump(json_data1, outfile1)
+	"""Function to read link to wikimedia url and return address to photo thumbnail,
+	address to original size image, address to pages (file) with all info of phtoto and get photo name. 
+	e.g. Pond Water Under the Microscope.jpg
+	e.g. https://upload.wikimedia.org/wikipedia/commons/9/99/Pond_Water_Under_the_Microscope.jpg
+	            
+	Args:
+		file_name (string): list of wikimedia urls
+    
+	Returns:
+		name_list (string): list of prased photo names
+		address_list_thumb (string): list address to thumbnail size photos		
+		address_list_original (string): list address to full size size photos
+		address_list_original (string): list address to full size size photos
+		file_address_list (string) : list of address to complete info link to photo
+		url_counter (integer) : a url counter for that counts position from url_list
+    """
+
+
+	url_counter = 0
+	html_page = urllib.request.urlopen(url_list[url_counter]) 
+	soup = BeautifulSoup(html_page, 'lxml')
+	data_name = {}
+	name_list = []
+	address_list_thumb = []
+	address_list_original = []
+	file_address_list = []
+
+	count = 0
+	for a_ in soup.findAll('a'):
+		tmp = a_.get('href')
+
+		if('/wiki/File:' in str(tmp)):
+			
+
+			href = tmp
+
+
+			for link in a_.findAll('img'):
+
+				count += 1
+
+				file_name = (link.get('alt'))
+				file_address = (link.get('src'))
+
+				data_name[file_name] = file_address
+
+				name_list.append(file_name.rstrip())
+				address_list_thumb.append(file_address.rstrip())
+				file_address_tmp = 'https://commons.wikimedia.org/wiki/File:' + file_address.split('/')[-2].rstrip()
+				file_address_list.append(file_address_tmp)
+				thumb_pix = '/' + file_address.split('/')[-1][0:3]       
+				#print(file_address.split(thumb_pix)[0].replace('/thumb',''))
+				address_list_original.append(file_address.split(thumb_pix)[0].replace('/thumb',''))
+
+
+	# json_data1 = json.dumps(data_name)
+
+	# with open('data_name.json', 'w') as outfile1:
+	#     json.dump(json_data1, outfile1)
+
+	return name_list, address_list_thumb, address_list_original, file_address_list, url_counter
+
+
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-if(6>5):
+def make_photo_collage(address_list_thumb, url_counter):
+
+	"""Function to read link to wikimedia photo urls and make a collage from randomly 100 thumbnail photos,
+	the photo_collage.png is then saved under images_(url_counter) path with json file containing photo info index 
+
+	            
+	Args:
+		address_list_thumb (string): list address to thumbnail size photos
+		url_counter (integer) : a url counter for that counts position from url_list
+    
+	Returns:
+		None
+
+    """
+
+	collage_index = {}	
 
 	random_index = list(np.random.choice(range(len(address_list_thumb)), 100))
 
@@ -103,115 +174,148 @@ if(6>5):
 
 		new_img.paste(img_resize_crop, (i*60,j*60))
 
+	directory = 'images_' + str(url_counter)
+	if not os.path.exists(directory):
+		os.makedirs(directory)
 
-	if not os.path.exists('images'):
-		os.makedirs('images')
-	new_img.save("images/photo_collage.png")
+	new_img.save(directory+'/photo_collage.png')
 	json_data2 = json.dumps(collage_index)
 
-	with open('images/index_collage.json', 'w') as outfile2:
+	with open(directory+'/index_collage.json', 'w') as outfile2:
 		json.dump(json_data2, outfile2)
 
-#   get author name
-#'https://commons.wikimedia.org/wiki/File:Daucus_carota_subsp._maximus_MHNT.BOT.2007.40.407.jpg'   #'https://commons.wikimedia.org/wiki/File:Pond_Water_Under_the_Microscope.jpg'
-
-author_name_list = []
-source_list = []
-license_link_list = []
-license_code_list = []
-
-
-print('Downloading files ...')
-
-thumbnail = True  #if False download original photo
-
-for counter in tqdm(range(len(file_address_list))):
 
 
 
-	html_page = urllib.request.urlopen(file_address_list[counter])
+def get_photos_infos(name_list, address_list_thumb, address_list_original, file_address_list, url_counter, thumbnail = True):
+
+	"""Function to read link to wikimedia photo urls and download thumbnail size if fkag is True
+	otherwise download original size photos, get the name of auhtor, the credit of the photo, 
+	license code, license code link, and makes "photo_fetch_info.csv" with all downloaded photo
+	indexed including links, author, credit, license. Also prints few line of csv file in output
+
+	            
+	Args:
+		name_list (string): list of prased photo names
+		address_list_thumb (string): list address to thumbnail size photos		
+		address_list_original (string): list address to full size size photos
+		address_list_original (string): list address to full size size photos
+		file_address_list (string) : list of address to complete info link to photo
+		url_counter (integer) : a url counter for that counts position from url_list
+    
+	Returns:
+		None
+
+    """
+
+
+	author_name_list = []
+	source_list = []
+	license_link_list = []
+	license_code_list = []
+
+
+	print('Downloading files ...')
 
 	if(thumbnail == True):
 
-		image_link = address_list_thumb[counter]
+
+		print('. Thumbnail size images .')
 
 	else:
 
-		image_link = address_list_original[counter]
-
-	response = requests.get(image_link)
-	img = Image.open(BytesIO(response.content))
-
-	if not os.path.exists('images'):
-		os.makedirs('images')
-
-	img.save('images/'+'{}.png'.format(counter))
+		print('. Original size images .')	
 
 
-	soup = BeautifulSoup(html_page, 'lxml')
+	for counter in tqdm(range(len(file_address_list))):
 
 
-	count=0
-	for img in soup.findAll('tr'):
-		text=str(img.get('style'))
-		if(((text == "vertical-align: top") or (text == 'valign="top"'))): #and (str(img.get('id') == "fileinfotpl_aut")
-			count += 1
 
-			td_list = img.findAll('td')
+		html_page = urllib.request.urlopen(file_address_list[counter])
 
-			for item in td_list:
+		if(thumbnail == True):
 
-				if(item.get('id') == "fileinfotpl_src"):
+			image_link = address_list_thumb[counter]
 
-					src_name = str(td_list[1]).strip().split('>')[2][:-6].rstrip()
-					if('<' in src_name or (len(src_name) == 0)):
-						src_name = None
+		else:
 
-				if(item.get('id') == "fileinfotpl_aut"):
-					auth_name = str(td_list[1]).strip().split('>')[2][:-3].rstrip()
-					if('<' in auth_name or (len(auth_name) == 0)):
-						auth_name = None
+			image_link = address_list_original[counter]
 
-	#print(url_test)
-	#print(auth_name)
-	#print(src_name)
+		response = requests.get(image_link)
+		img = Image.open(BytesIO(response.content))
 
-	author_name_list.append(auth_name)
-	source_list.append(src_name)
+		directory = 'images_' + str(url_counter)
+		if not os.path.exists(directory):
+			os.makedirs(directory)
 
-	for img in soup.findAll('span'):
-		text=img.get('class')
-
-		if('licensetpl' in str(text)):
+		img.save(directory+'/'+'{}.png'.format(counter))
 
 
-			if('licensetpl_link"' in str(img)):
+		soup = BeautifulSoup(html_page, 'lxml')
 
-				license_link = str(img).split('>')[1][:-7].rstrip()
-				if('<' in license_link or (len(license_link) == 0)):
-					license_link = None				
 
-			if('licensetpl_short' in str(img)):
+		count=0
+		for img in soup.findAll('tr'):
+			text=str(img.get('style'))
+			if(((text == "vertical-align: top") or (text == 'valign="top"'))): #and (str(img.get('id') == "fileinfotpl_aut")
+				count += 1
 
-				license_code = str(img).split('>')[1][:-6].rstrip()
-				if('<' in license_code or (len(license_code) == 0)):
-					license_code = None
+				td_list = img.findAll('td')
 
-	#print(license_link)
-	#print(license_code)
+				for item in td_list:
 
-	license_link_list.append(license_link)
-	license_code_list.append(license_code)
+					if(item.get('id') == "fileinfotpl_src"):
 
-#print(address_list_original)
-#print(file_address_list)
-print(len(author_name_list),len(source_list),len(license_link_list),len(license_code_list))	
+						src_name = str(td_list[1]).strip().split('>')[2][:-6].rstrip()
+						if('<' in src_name or (len(src_name) == 0)):
+							src_name = None
 
-df = pd.DataFrame([np.array(list(name_list)), np.array(list(author_name_list)),np.array(list(source_list)), np.array(list(license_code_list))\
-	              ,np.array(list(license_link_list)),np.array(list(address_list_original)),np.array(list(file_address_list))],\
-                  index = ['File_name', 'Author_name', 'Credit', 'license_code', 'license_link', 'link_original_file', 'link_page']).T  
-print(df)
+					if(item.get('id') == "fileinfotpl_aut"):
+						auth_name = str(td_list[1]).strip().split('>')[2][:-3].rstrip()
+						if('<' in auth_name or (len(auth_name) == 0)):
+							auth_name = None
 
-df.to_csv('images/photo_fetch_info.csv')
 
-#save photos to disk
+
+		author_name_list.append(auth_name)
+		source_list.append(src_name)
+
+		for img in soup.findAll('span'):
+			text=img.get('class')
+
+			if('licensetpl' in str(text)):
+
+
+				if('licensetpl_link"' in str(img)):
+
+					license_link = str(img).split('>')[1][:-7].rstrip()
+					if('<' in license_link or (len(license_link) == 0)):
+						license_link = None				
+
+				if('licensetpl_short' in str(img)):
+
+					license_code = str(img).split('>')[1][:-6].rstrip()
+					if('<' in license_code or (len(license_code) == 0)):
+						license_code = None
+
+
+		license_link_list.append(license_link)
+		license_code_list.append(license_code)
+
+
+	#print(len(author_name_list),len(source_list),len(license_link_list),len(license_code_list))	
+
+	df = pd.DataFrame([np.array(list(name_list)), np.array(list(author_name_list)),np.array(list(source_list)), np.array(list(license_code_list))\
+		              ,np.array(list(license_link_list)),np.array(list(address_list_original)),np.array(list(file_address_list))],\
+	                  index = ['File_name', 'Author_name', 'Credit', 'license_code', 'license_link', 'link_original_file', 'link_page']).T  
+	print(df.head())
+
+	df.to_csv(directory+'/photo_fetch_info.csv')
+
+
+
+
+url_list = get_wiki_address('wiki_image_category_link.txt')
+name_list, address_list_thumb, address_list_original, file_address_list, url_counter = get_photo_address(url_list)
+make_photo_collage(address_list_thumb, url_counter)
+get_photos_infos(name_list, address_list_thumb, address_list_original, file_address_list, url_counter, thumbnail = True)
