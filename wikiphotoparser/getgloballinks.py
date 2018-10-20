@@ -113,7 +113,7 @@ class wiki_photo_parser():
 					file_name = (link.get('alt'))
 					file_address = (link.get('src'))
 
-					self.data_name[file_name] = file_address
+					self.data_name[count] = file_address
 
 					self.name_list.append(file_name.rstrip())
 					self.address_list_thumb.append(file_address.rstrip())
@@ -124,10 +124,15 @@ class wiki_photo_parser():
 					self.address_list_original.append(file_address.split(thumb_pix)[0].replace('/thumb',''))
 
 
-		# json_data1 = json.dumps(data_name)
 
-		# with open('data_name.json', 'w') as outfile1:
-		#     json.dump(json_data1, outfile1)
+		directory = 'images_' + str(self.url_counter)
+		if not os.path.exists(directory):
+			os.makedirs(directory)
+
+		json_data1 = json.dumps(self.data_name)
+
+		with open(directory+'/data_name.json', 'w') as outfile1:
+		    json.dump(json_data1, outfile1)
 
 		#return name_list, address_list_thumb, address_list_original, file_address_list, url_counter
 
@@ -201,6 +206,7 @@ class wiki_photo_parser():
 			os.makedirs(directory)
 
 		new_img.save(directory+'/photo_collage.png')
+
 		json_data2 = json.dumps(self.collage_index)
 
 		with open(directory+'/index_collage.json', 'w') as outfile2:
@@ -365,4 +371,4 @@ wiki_parser = wiki_photo_parser()
 wiki_parser.read_wiki_address('wiki_image_category_link.txt')
 wiki_parser.get_photo_address()
 wiki_parser.make_photo_collage()
-wiki_parser.get_photos_infos()
+wiki_parser.get_photos_infos(thumbnail=True)
