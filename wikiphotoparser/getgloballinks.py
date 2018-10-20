@@ -61,10 +61,11 @@ def get_photo_address(url_list):
 		address_list_original (string): list address to full size size photos
 		address_list_original (string): list address to full size size photos
 		file_address_list (string) : list of address to complete info link to photo
+		url_counter (integer) : a url counter for that counts position from url_list
     """
 
-
-	html_page = urllib.request.urlopen(url_list[0]) 
+	url_counter = 0
+	html_page = urllib.request.urlopen(url_list[url_counter]) 
 	soup = BeautifulSoup(html_page, 'lxml')
 	data_name = {}
 	name_list = []
@@ -105,10 +106,10 @@ def get_photo_address(url_list):
 	# with open('data_name.json', 'w') as outfile1:
 	#     json.dump(json_data1, outfile1)
 
-	return name_list, address_list_thumb, address_list_original, file_address_list
+	return name_list, address_list_thumb, address_list_original, file_address_list, url_counter
 
 url_list = get_wiki_address('wiki_image_category_link.txt')
-name_list, address_list_thumb, address_list_original, file_address_list = get_photo_address(url_list)
+name_list, address_list_thumb, address_list_original, file_address_list, url_counter = get_photo_address(url_list)
 
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
