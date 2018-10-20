@@ -65,7 +65,7 @@ def get_photo_address(url_list):
     """
 
 
-	#url_counter = 0
+	url_counter = 0
 	html_page = urllib.request.urlopen(url_list[url_counter]) 
 	soup = BeautifulSoup(html_page, 'lxml')
 	data_name = {}
