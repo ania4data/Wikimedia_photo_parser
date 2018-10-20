@@ -33,7 +33,8 @@ def get_wiki_address(file_name):
 		while line:
 			if('https://commons.wikimedia.org/wiki/' not in line):
 
-				Print('Error: link is not from wikimedia common Quality images')
+				print('-----------Error: link is not from wikimedia common Quality images-------- \n')
+				
 				break
 
 			url_list.append(line.rstrip())
@@ -43,55 +44,76 @@ def get_wiki_address(file_name):
 
 	return url_list  
 
+
+def get_photo_address(url_list):
+
+	"""Function to read link to wikimedia url and return address to photo thumbnail,
+	address to original size image, address to pages (file) with all info of phtoto and get photo name. 
+	e.g. Pond Water Under the Microscope.jpg
+	e.g. https://upload.wikimedia.org/wikipedia/commons/9/99/Pond_Water_Under_the_Microscope.jpg
+	            
+	Args:
+		file_name (string): list of wikimedia urls
+    
+	Returns:
+		name_list (string): list of prased photo names
+		address_list_thumb (string): list address to thumbnail size photos		
+		address_list_original (string): list address to full size size photos
+		address_list_original (string): list address to full size size photos
+		file_address_list (string) : list of address to complete info link to photo
+    """
+
+
+	html_page = urllib.request.urlopen(url_list[0]) 
+	soup = BeautifulSoup(html_page, 'lxml')
+	data_name = {}
+	name_list = []
+	address_list_thumb = []
+	address_list_original = []
+	file_address_list = []
+
+	count = 0
+	for a_ in soup.findAll('a'):
+		tmp = a_.get('href')
+
+		if('/wiki/File:' in str(tmp)):
+			
+
+			href = tmp
+
+
+			for link in a_.findAll('img'):
+
+				count += 1
+
+				file_name = (link.get('alt'))
+				file_address = (link.get('src'))
+
+				data_name[file_name] = file_address
+
+				name_list.append(file_name.rstrip())
+				address_list_thumb.append(file_address.rstrip())
+				file_address_tmp = 'https://commons.wikimedia.org/wiki/File:' + file_address.split('/')[-2].rstrip()
+				file_address_list.append(file_address_tmp)
+				thumb_pix = '/' + file_address.split('/')[-1][0:3]       
+				#print(file_address.split(thumb_pix)[0].replace('/thumb',''))
+				address_list_original.append(file_address.split(thumb_pix)[0].replace('/thumb',''))
+
+
+	# json_data1 = json.dumps(data_name)
+
+	# with open('data_name.json', 'w') as outfile1:
+	#     json.dump(json_data1, outfile1)
+
+	return name_list, address_list_thumb, address_list_original, file_address_list
+
 url_list = get_wiki_address('wiki_image_category_link.txt')
+name_list, address_list_thumb, address_list_original, file_address_list = get_photo_address(url_list)
 
-
-html_page = urllib.request.urlopen(url_list[0]) 
-soup = BeautifulSoup(html_page, 'lxml')
-images = []
-data_name = {}
-collage_index = {}
-
-name_list = []
-address_list_thumb = []
-address_list_original = []
-file_address_list = []
-
-count = 0
-for a_ in soup.findAll('a'):
-	tmp = a_.get('href')
-
-	if('/wiki/File:' in str(tmp)):
-		
-
-		href = tmp
-
-
-		for link in a_.findAll('img'):
-
-			count += 1
-
-			file_name = (link.get('alt'))
-			file_address = (link.get('src'))
-
-			data_name[file_name] = file_address
-
-			name_list.append(file_name.rstrip())
-			address_list_thumb.append(file_address.rstrip())
-			file_address_tmp = 'https://commons.wikimedia.org/wiki/File:' + file_address.split('/')[-2].rstrip()
-			file_address_list.append(file_address_tmp)
-			thumb_pix = '/' + file_address.split('/')[-1][0:3]       
-			#print(file_address.split(thumb_pix)[0].replace('/thumb',''))
-			address_list_original.append(file_address.split(thumb_pix)[0].replace('/thumb',''))
-
-
-json_data1 = json.dumps(data_name)
-
-with open('data_name.json', 'w') as outfile1:
-    json.dump(json_data1, outfile1)
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 if(6>5):
+	collage_index = {}	
 
 	random_index = list(np.random.choice(range(len(address_list_thumb)), 100))
 
