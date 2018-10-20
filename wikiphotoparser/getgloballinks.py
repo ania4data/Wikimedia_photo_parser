@@ -108,12 +108,24 @@ def get_photo_address(url_list):
 
 	return name_list, address_list_thumb, address_list_original, file_address_list, url_counter
 
-url_list = get_wiki_address('wiki_image_category_link.txt')
-name_list, address_list_thumb, address_list_original, file_address_list, url_counter = get_photo_address(url_list)
 
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-if(6>5):
+def make_photo_collage(address_list_thumb, url_counter):
+
+	"""Function to read link to wikimedia photo urls and make a collage from randomly 100 thumbnail photos,
+	the photo_collage.png is then saved under images_(url_counter) path with json file containing photo info index 
+
+	            
+	Args:
+		address_list_thumb (string): list address to thumbnail size photos
+		url_counter (integer) : a url counter for that counts position from url_list
+    
+	Returns:
+		None
+
+    """
+
 	collage_index = {}	
 
 	random_index = list(np.random.choice(range(len(address_list_thumb)), 100))
@@ -161,14 +173,21 @@ if(6>5):
 
 		new_img.paste(img_resize_crop, (i*60,j*60))
 
+	directory = 'images_' + str(url_counter)
+	if not os.path.exists(directory):
+		os.makedirs(directory)
 
-	if not os.path.exists('images'):
-		os.makedirs('images')
-	new_img.save("images/photo_collage.png")
+	new_img.save(directory+'/photo_collage.png')
 	json_data2 = json.dumps(collage_index)
 
-	with open('images/index_collage.json', 'w') as outfile2:
+	with open(directory+'/index_collage.json', 'w') as outfile2:
 		json.dump(json_data2, outfile2)
+
+
+url_list = get_wiki_address('wiki_image_category_link.txt')
+name_list, address_list_thumb, address_list_original, file_address_list, url_counter = get_photo_address(url_list)
+make_photo_collage(address_list_thumb, url_counter)
+
 
 #   get author name
 #'https://commons.wikimedia.org/wiki/File:Daucus_carota_subsp._maximus_MHNT.BOT.2007.40.407.jpg'   #'https://commons.wikimedia.org/wiki/File:Pond_Water_Under_the_Microscope.jpg'
