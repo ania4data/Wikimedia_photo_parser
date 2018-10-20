@@ -11,7 +11,42 @@ import pandas as pd
 import os
 
 
-html_page = urllib.request.urlopen('https://commons.wikimedia.org/wiki/Commons:Quality_images/Subject/Microscopic') 
+
+def get_wiki_address(file_name):
+
+
+	"""Function to read in data from a txt file. The txt file should have
+	the wikimedia photo link to quality images e.g.
+	https://commons.wikimedia.org/wiki/Commons:Quality_images/Technical/Exposure
+            
+	Args:
+		file_name (string): name of a file to read from
+    
+	Returns:
+		url_list (string): list of wikimedia potential pages to sparse
+    
+	"""
+        
+	with open(file_name) as file:
+		url_list = []
+		line = file.readline()
+		while line:
+			if('https://commons.wikimedia.org/wiki/' not in line):
+
+				Print('Error: link is not from wikimedia common Quality images')
+				break
+
+			url_list.append(line.rstrip())
+			line = file.readline()
+
+		file.close()
+
+	return url_list  
+
+url_list = get_wiki_address('wiki_image_category_link.txt')
+
+
+html_page = urllib.request.urlopen(url_list[0]) 
 soup = BeautifulSoup(html_page, 'lxml')
 images = []
 data_name = {}
