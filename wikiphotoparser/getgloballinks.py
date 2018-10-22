@@ -348,3 +348,18 @@ class wiki_photo_parser():
 		df.to_csv(directory+'/photo_fetch_info.csv')
 
 		return df.shape[1]
+
+
+	def __repr__(self):
+
+		"""Function to output the characteristics of the wikiparser instance
+        
+		Args:
+		None
+        
+		Returns:
+			string: characteristics of the wikiparser
+        
+		 """		
+
+		return 'This class parse wikimedia commons, download photo/infos'
