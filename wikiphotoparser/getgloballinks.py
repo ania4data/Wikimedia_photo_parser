@@ -135,7 +135,7 @@ class wiki_photo_parser():
 		with open(directory+'/data_name.json', 'w') as outfile1:
 		    json.dump(json_data1, outfile1)
 
-		#return name_list, address_list_thumb, address_list_original, file_address_list, url_counter
+		return len(self.name_list)   #, address_list_thumb, address_list_original, file_address_list, url_counter
 
 
 
@@ -213,7 +213,7 @@ class wiki_photo_parser():
 		with open(directory+'/index_collage.json', 'w') as outfile2:
 			json.dump(json_data2, outfile2)
 
-
+		return len(self.collage_index)
 
 
 	def get_photos_infos(self, thumbnail = False, fullsize = False):
@@ -360,7 +360,7 @@ class wiki_photo_parser():
 
 		df.to_csv(directory+'/photo_fetch_info.csv')
 
-
+		return df.shape[1]
 
 
 # url_list = get_wiki_address('wiki_image_category_link.txt')
@@ -370,6 +370,6 @@ class wiki_photo_parser():
 
 wiki_parser = wiki_photo_parser()
 wiki_parser.read_wiki_address('wiki_image_category_link.txt')
-wiki_parser.get_photo_address()
-wiki_parser.make_photo_collage()
-wiki_parser.get_photos_infos(thumbnail=True)
+print(wiki_parser.get_photo_address())
+print(wiki_parser.make_photo_collage())
+print(wiki_parser.get_photos_infos(thumbnail=True))
