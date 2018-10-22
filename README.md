@@ -5,6 +5,9 @@
 - From 100 random images from the main link a photo grid/collage is created
 - All related info with regard to photos (e.g. photo name, author name, credit, license, links) all saved in an output `photo_fetch_info.csv file`
 
+<p align="center"> 
+<img src="https://github.com/ania4data/Wikimedia_photo_parser/blob/master/wikiphotoparser/samples/photo_collage_sunset.png">
+</p>
 ![sunset](/wikiphotoparser/samples/photo_collage_sunset.png)
 
 
