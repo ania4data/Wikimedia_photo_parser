@@ -79,4 +79,10 @@ wiki_parser.get_photos_infos(thumbnail=True)
 
 ## Source dataset
 
-Data is input link to a wikimedia page e.g. (https://commons.wikimedia.org/wiki/Commons:Quality_images/Subject/Microscopic)
+Data is input link to a wikimedia page e.g. 
+
+- https://commons.wikimedia.org/wiki/Commons:Quality_images/Subject/Microscopic
+- https://commons.wikimedia.org/wiki/Commons:Quality_images/Technical/Exposure
+- https://commons.wikimedia.org/wiki/Commons:Quality_images/Subject/Astronomy
+- https://commons.wikimedia.org/wiki/Commons:Quality_images/Subject/Fungi
+- https://commons.wikimedia.org/wiki/Commons:Quality_images/Subject/Sunsets
