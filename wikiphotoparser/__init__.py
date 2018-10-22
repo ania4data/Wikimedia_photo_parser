@@ -1,1 +1,1 @@
-from .Gaussiandistribution import Gaussian
+from .getgloballinks import wiki_photo_parser
