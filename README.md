@@ -51,6 +51,7 @@
 conda update python
 python3 -m venv name_of_your_choosing
 source name_of_your_choosing/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
