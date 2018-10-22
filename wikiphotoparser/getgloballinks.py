@@ -1,3 +1,4 @@
+
 from bs4 import BeautifulSoup
 import urllib.request
 import re
@@ -50,7 +51,7 @@ class wiki_photo_parser():
 		print('Getting wiki adresses ...')
 
 		with open(file_name) as file:
-			#url_list = []
+			
 			line = file.readline()
 			while line:
 				if('https://commons.wikimedia.org/wiki/' not in line):
@@ -73,29 +74,28 @@ class wiki_photo_parser():
 		address to original size image, address to pages (file) with all info of phtoto and get photo name. 
 		e.g. Pond Water Under the Microscope.jpg
 		e.g. https://upload.wikimedia.org/wikipedia/commons/9/99/Pond_Water_Under_the_Microscope.jpg
+
+		name_list (string): list of prased photo names
+		address_list_thumb (string): list address to thumbnail size photos		
+		address_list_original (string): list address to full size size photos
+		address_list_original (string): list address to full size size photos
+		file_address_list (string) : list of address to complete info link to photo
+		url_counter (integer) : a url counter for that counts position from url_list
 		            
 		Args:
 			file_name (string): list of wikimedia urls
 	    
 		Returns:
-			name_list (string): list of prased photo names
-			address_list_thumb (string): list address to thumbnail size photos		
-			address_list_original (string): list address to full size size photos
-			address_list_original (string): list address to full size size photos
-			file_address_list (string) : list of address to complete info link to photo
-			url_counter (integer) : a url counter for that counts position from url_list
+			length name_list (integer): 
+
 	    """
 
 		print('Getting photo adresses ...')
 
-		#url_counter = 0
+		
 		html_page = urllib.request.urlopen(self.url_list[self.url_counter]) 
 		soup = BeautifulSoup(html_page, 'lxml')
-		# data_name = {}
-		# name_list = []
-		# address_list_thumb = []
-		# address_list_original = []
-		# file_address_list = []
+
 
 		count = 0
 		for a_ in soup.findAll('a'):
@@ -109,8 +109,7 @@ class wiki_photo_parser():
 
 				for link in a_.findAll('img'):
 
-					count += 1
-
+					
 					file_name = (link.get('alt'))
 					file_address = (link.get('src'))
 
@@ -121,8 +120,9 @@ class wiki_photo_parser():
 					file_address_tmp = 'https://commons.wikimedia.org/wiki/File:' + file_address.split('/')[-2].rstrip()
 					self.file_address_list.append(file_address_tmp)
 					thumb_pix = '/' + file_address.split('/')[-1][0:3]       
-					#print(file_address.split(thumb_pix)[0].replace('/thumb',''))
 					self.address_list_original.append(file_address.split(thumb_pix)[0].replace('/thumb',''))
+
+					count += 1
 
 
 
@@ -135,11 +135,9 @@ class wiki_photo_parser():
 		with open(directory+'/data_name.json', 'w') as outfile1:
 		    json.dump(json_data1, outfile1)
 
-		return len(self.name_list)   #, address_list_thumb, address_list_original, file_address_list, url_counter
+		return len(self.name_list)   
 
 
-
-	#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	def make_photo_collage(self):
 
 		"""Function to read link to wikimedia photo urls and make a collage from randomly 100 thumbnail photos,
@@ -151,11 +149,11 @@ class wiki_photo_parser():
 			url_counter (integer) : a url counter for that counts position from url_list
 	    
 		Returns:
-			None
+
+			length of collage index (integer)
 
 	    """
 
-		#collage_index = {}	
 
 		random_index = list(np.random.choice(range(len(self.address_list_thumb)), 100))
 
@@ -181,7 +179,6 @@ class wiki_photo_parser():
 				new_width=int(60*ratio)
 				img_resize=img.resize((new_width,60))
 
-			#img_resize.save('{}.png'.format(k))
 			center_y=int(img_resize.width/2.)
 			center_x=int(img_resize.height/2.)
 
@@ -194,11 +191,9 @@ class wiki_photo_parser():
 
 			img_resize_crop=img_resize.crop((upper,left,lower,right))
 
-
-			#img_resize_crop.thumbnail((60,60), Image.ANTIALIAS)
 			j = int(k/10)
 			i = int(k - (j*10))
-			#print(k)
+
 
 			new_img.paste(img_resize_crop, (i*60,j*60))
 
@@ -238,16 +233,9 @@ class wiki_photo_parser():
 	    """
 
 
-		# author_name_list = []
-		# source_list = []
-		# license_link_list = []
-		# license_code_list = []
-
-
 		print('Downloading files ...')
 
 		if(thumbnail == True and thumbnail != fullsize):
-
 
 			print('. Thumbnail size images .')
 
@@ -267,7 +255,6 @@ class wiki_photo_parser():
 
 
 		for counter in tqdm(range(len(self.file_address_list))):
-
 
 
 			html_page = urllib.request.urlopen(self.file_address_list[counter])
@@ -301,7 +288,7 @@ class wiki_photo_parser():
 			count=0
 			for img in soup.findAll('tr'):
 				text=str(img.get('style'))
-				if(((text == "vertical-align: top") or (text == 'valign="top"'))): #and (str(img.get('id') == "fileinfotpl_aut")
+				if(((text == "vertical-align: top") or (text == 'valign="top"'))): 
 					count += 1
 
 					td_list = img.findAll('td')
@@ -347,8 +334,6 @@ class wiki_photo_parser():
 			self.license_code_list.append(license_code)
 
 
-		#print(len(author_name_list),len(source_list),len(license_link_list),len(license_code_list))	
-
 		df = pd.DataFrame([np.array(list(self.name_list)), np.array(list(self.author_name_list)),np.array(list(self.source_list)), np.array(list(self.license_code_list))\
 			              ,np.array(list(self.license_link_list)),np.array(list(self.address_list_original)),np.array(list(self.file_address_list))],\
 		                  index = ['File_name', 'Author_name', 'Credit', 'license_code', 'license_link', 'link_original_file', 'link_page']).T  
@@ -362,11 +347,6 @@ class wiki_photo_parser():
 
 		return df.shape[1]
 
-
-# url_list = get_wiki_address('wiki_image_category_link.txt')
-# name_list, address_list_thumb, address_list_original, file_address_list, url_counter = get_photo_address(url_list)
-# make_photo_collage(address_list_thumb, url_counter)
-# get_photos_infos(name_list, address_list_thumb, address_list_original, file_address_list, url_counter, thumbnail = True)
 
 wiki_parser = wiki_photo_parser()
 wiki_parser.read_wiki_address('wiki_image_category_link.txt')
