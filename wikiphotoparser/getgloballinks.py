@@ -45,7 +45,7 @@ class wiki_photo_parser():
 			file_name (string): name of a file to read from
 	    
 		Returns:
-			url_list (string): list of wikimedia potential pages to sparse
+			url_list (string): first member of list of wikimedia potential pages to sparse
 	    
 		"""
 		print('Getting wiki adresses ...')
@@ -65,7 +65,7 @@ class wiki_photo_parser():
 
 			file.close()
 
-		#return url_list  
+		return url_list[0]
 
 
 	def get_photo_address(self):
@@ -228,10 +228,13 @@ class wiki_photo_parser():
 			address_list_original (string): list address to full size size photos
 			file_address_list (string) : list of address to complete info link to photo
 			url_counter (integer) : a url counter for that counts position from url_list
+			thumbnail (boolean): False/ True, not download/download thumbnail size photo
+			fullsize (boolean): False/ True, not download/download full size photo
 	    
 		Returns:
-			None
-
+			
+			df.shape[1] (integer): number of columns of dataframe
+ 
 	    """
 
 
