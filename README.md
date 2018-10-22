@@ -37,7 +37,7 @@
 	- a `photo_fetch_info.csv` containing all links/author and photo index
 	- two json files: for index to photo adress `data_name.json`, and index to index of collage `index_collage.json`
 
-- A `txt` file: `wiki_image_category_link.txt` contain link to wikimedia common the to be sparsed
+- A `txt` file: `wiki_image_category_link.txt` contain link to wikimedia common to be sparsed
 - Two example file `*.py`: `example.py` and `example_with_pip_install`
 - A package requirement file:  `requirements.txt`
 - MIT License file
@@ -55,11 +55,11 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## How to run the code without pip install
+## How to run the code without installing package
 
-Follow `example.py` in the  wikiphotoparser folder
+Just follow `example.py` bu running python in wikiphotoparser folder
 
-## How to run the code with pip install
+## How to run the code with installing package
 
 In your virtual enviroment `name_of_your_choosing` where `setup.py` located do the following:
 
