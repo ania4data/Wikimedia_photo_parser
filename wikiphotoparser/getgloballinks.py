@@ -65,7 +65,7 @@ class wiki_photo_parser():
 
 			file.close()
 
-		return url_list[0]
+		return self.url_list[0]
 
 
 	def get_photo_address(self):
