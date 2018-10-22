@@ -11,7 +11,7 @@
 ![sunset](/wikiphotoparser/samples/photo_collage_sunset.png)
 
 
-# Dependecies and packages:
+## Dependecies and packages:
 
 - Python 3.x
 - numpy
@@ -28,7 +28,7 @@
 
 
 
-# General repository content:
+## General repository content:
 
 - A pyhon file: `getgloballinks.py`
 - Image folder (`samples`):
@@ -43,7 +43,7 @@
 - MIT License file
 
 
-# Basic Usage for command line
+## Basic Usage for command line
 
 - Clone the repository use: `git clone https://github.com/ania4data/Wikimedia_photo_parser.git`
 - Create a virtual enviroment where `requirements.txt` is located: 
@@ -54,17 +54,17 @@ source name_of_your_choosing/bin/activate
 pip install -r requirements.txt
 ```
 
-# How to run the code without pip install
+## How to run the code without pip install
 
 Follow `example.py` in the  wikiphotoparser folder
 
-# How to run the code without pip install
+## How to run the code with pip install
 
 In your virtual enviroment `name_of_your_choosing` where `setup.py` located do the following:
 
 `pip install .`
 
-then follow `example_with_pip_install` in your python enviroment
+then follow `example_with_pip_install` (located in wikiphotoparser folder) in your python enviroment
 
 
 ## To download photos with their info in csv
@@ -77,6 +77,6 @@ then follow `example_with_pip_install` in your python enviroment
 wiki_parser.get_photos_infos(thumbnail=True)
 
 
-# Source dataset
+## Source dataset
 
 Data is input link to a wikimedia page e.g. (https://commons.wikimedia.org/wiki/Commons:Quality_images/Subject/Microscopic)
