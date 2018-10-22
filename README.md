@@ -1,4 +1,4 @@
-# A package to parse Wikimedia common pages to download photographs and related infos and make a collage
+# Wikimedia-common photo parsing package
 
 - In this package Wikimedia common quality images are parsed to first download the photo link.
 - The photos links are used to download photos either original size or thumbnail size
