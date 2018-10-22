@@ -4,7 +4,6 @@ beautifulsoup4==4.6.0
 certifi==2018.10.15
 chardet==3.0.4
 cycler==0.10.0
-distributions==0.1
 docutils==0.14
 idna==2.6
 imagesize==1.1.0
