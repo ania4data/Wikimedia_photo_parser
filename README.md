@@ -28,7 +28,7 @@
 
 
 
-# Repository content:
+# General repository content:
 
 - A pyhon file: `getgloballinks.py`
 - Image folder (`samples`):
@@ -38,30 +38,34 @@
 	- two json files: for index to photo adress `data_name.json`, and index to index of collage `index_collage.json`
 
 - A `txt` file: `wiki_image_category_link.txt` contain link to wikimedia common the to be sparsed
+- Two example file `*.py`: `example.py` and `example_with_pip_install`
+- A package requirement file:  `requirements.txt`
 - MIT License file
 
 
 # Basic Usage for command line
 
 - Clone the repository use: `git clone https://github.com/ania4data/Wikimedia_photo_parser.git`
+- Create a virtual enviroment where `requirements.txt` is located: 
+```
+conda update python
+python3 -m venv name_of_your_choosing
+source name_of_your_choosing/bin/activate
+pip install -r requirements.txt
+```
 
-# How to run 
+# How to run the code without pip install
 
-## To initilize
+Follow `example.py` in the  wikiphotoparser folder
 
-wiki_parser = wiki_photo_parser()
+# How to run the code without pip install
 
-## To read wikimedia link from file
+In your virtual enviroment `name_of_your_choosing` where `setup.py` located do the following:
 
-wiki_parser.read_wiki_address('wiki_image_category_link.txt')
+`pip install .`
 
-## To get photo addresses
+then follow `example_with_pip_install` in your python enviroment
 
-wiki_parser.get_photo_address()
-
-## To get photo collage
-
-wiki_parser.make_photo_collage()
 
 ## To download photos with their info in csv
 
