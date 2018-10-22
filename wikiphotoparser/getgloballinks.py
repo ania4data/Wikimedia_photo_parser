@@ -217,6 +217,8 @@ class wiki_photo_parser():
 		otherwise download original size photos, get the name of auhtor, the credit of the photo, 
 		license code, license code link, and makes "photo_fetch_info.csv" with all downloaded photo
 		indexed including links, author, credit, license. Also prints few line of csv file in output
+		Only one of thumbnail or fullsize has to be true to download corresponding size image
+		of both False and both True only download csv file
 
 		            
 		Args:
@@ -346,10 +348,3 @@ class wiki_photo_parser():
 		df.to_csv(directory+'/photo_fetch_info.csv')
 
 		return df.shape[1]
-
-
-wiki_parser = wiki_photo_parser()
-wiki_parser.read_wiki_address('wiki_image_category_link.txt')
-print(wiki_parser.get_photo_address())
-print(wiki_parser.make_photo_collage())
-print(wiki_parser.get_photos_infos(thumbnail=True))
