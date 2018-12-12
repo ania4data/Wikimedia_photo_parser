@@ -31,5 +31,5 @@ Sphinx==1.8.1
 sphinxcontrib-websupport==1.1.0
 tqdm==4.25.0
 unicodecsv==0.14.1
-urllib3==1.22
+urllib3>=1.23
 wikiphotoparser==0.1
